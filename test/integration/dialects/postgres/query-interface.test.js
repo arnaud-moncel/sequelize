@@ -272,11 +272,7 @@ if (dialect.match(/^postgres/)) {
       });
 
       it('dont crash on index with include', async function() {
-        await this.sequelize.query(`
-            CREATE INDEX group_idx ON Group
-              USING btree (id)
-              INCLUDE (username);
-          `);
+        await this.sequelize.query('CREATE INDEX group_idx ON "Group" USING btree (username) INCLUDE(from);');
 
         await expect(this.queryInterface.showIndex('Group')).not.to.be.rejectedWith(Error);
       });

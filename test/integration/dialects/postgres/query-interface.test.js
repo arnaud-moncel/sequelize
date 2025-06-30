@@ -270,6 +270,12 @@ if (dialect.match(/^postgres/)) {
         const indexColumns = _.uniq(indexes.map(index => index.name));
         expect(indexColumns).to.be.empty;
       });
+
+      it('dont crash on index with include', async function() {
+        await this.sequelize.query('CREATE INDEX group_idx ON "Group" USING btree (username) INCLUDE(from);');
+
+        await expect(this.queryInterface.showIndex('Group')).not.to.be.rejectedWith(Error);
+      });
     });
   });
 }

@@ -148,7 +148,11 @@ class Query extends AbstractQuery {
 
     if (this.isShowIndexesQuery()) {
       for (const row of rows) {
-        const attributes = /ON .*? (?:USING .*?\s)?\(([^]*)\)/gi.exec(row.definition)[1].split(',');
+        const regexAttributes = /on .*? (?:using .*?\s)?\(([^)]*)\)( include \(([^]*)\))?/gi.exec(row.definition);
+        const attributes = regexAttributes[1].split(',');
+        if (regexAttributes[2]) {
+          attributes.push(...regexAttributes[2].split(','));
+        }
 
         // Map column index in table to column name
         const columns = _.zipObject(
